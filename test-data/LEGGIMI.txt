@@ -1,0 +1,23 @@
+PDF DI PROVA PER "SPORT E STILI DI VITA"
+=========================================
+
+Tre referti InBody FAC-SIMILE (dati inventati, coerenti tra loro),
+impacchettati nello stesso formato tecnico dei PDF di LookinBody Mac:
+una pagina A4 con dentro un'unica immagine JPEG.
+
+  BIA 2101.pdf  - donna, 45 anni, sovrappeso (punteggio 62, viscerale 12)
+  BIA 3407.pdf  - uomo, 62 anni, normopeso con poco muscolo (punteggio 71)
+  BIA 5512.pdf  - donna, 22 anni, atletica (punteggio 82)
+
+I file *_anteprima.png mostrano il contenuto senza aprire i PDF.
+
+COME FARE IL TEST
+1. Apri l'app su claude.ai (link dell'artifact "Sport e Stili di Vita").
+2. Vai alla tappa 2 "Carica i dati" e trascina uno dei PDF.
+3. Alla prima richiesta, autorizza la pagina a usare Claude.
+4. Dopo 20-60 secondi compare il form di verifica: controlla che i valori
+   corrispondano a quelli dell'anteprima PNG, poi salva.
+5. Compila i gusti e guarda le tappe 3 e 4 (anche "Genera i consigli").
+
+Ogni riga del footer dei referti riporta "FAC-SIMILE PER COLLAUDO":
+non sono documenti reali.
