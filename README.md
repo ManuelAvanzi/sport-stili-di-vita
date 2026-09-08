@@ -42,11 +42,15 @@ L'estrazione automatica dei valori e la generazione dei consigli usano il runtim
 come Artifact su claude.ai**: ogni visitatore usa il proprio account Claude e
 autorizza al primo utilizzo.
 
-Sulla versione online statica (GitHub Pages) la pagina degrada da sola: l'upload del
+**Per attivare l'AI sul sito pubblico** c'è il backend in `server/` (vedi
+`server/README.md`): un proxy con la chiave API dove il provider è intercambiabile
+(Claude o ChatGPT cambiando `PROVIDER` e `API_KEY`). Una volta deployato, basta
+mettere il suo URL in `window.SVS_API` dentro `index.html`.
+
+Senza backend, sulla versione online statica la pagina degrada da sola: l'upload del
 referto mostra l'anteprima e invita all'inserimento manuale; le tappe 3 e 4 mostrano i
-contenuti didattici e i calcoli non-AI. Per avere l'AI anche sul sito pubblico serve un
-piccolo backend che tenga la chiave API Claude (mai metterla nel client) — previsto
-come evoluzione, non incluso qui.
+contenuti didattici e i calcoli non-AI. Il backend di `server/` è esattamente quel pezzo:
+la chiave resta sul server, mai nel client.
 
 ## Deploy
 
