@@ -8,6 +8,8 @@ una pagina A4 con dentro un'unica immagine JPEG.
   BIA 2101.pdf  - donna, 45 anni, sovrappeso (punteggio 62, viscerale 12)
   BIA 3407.pdf  - uomo, 62 anni, normopeso con poco muscolo (punteggio 71)
   BIA 5512.pdf  - donna, 22 anni, atletica (punteggio 82)
+  BIA 4870.pdf  - uomo, 30 anni, molto muscoloso (punteggio 88, IMC "alto" per muscolo)
+  BIA 6234.pdf  - donna, 68 anni, sottopeso con poco muscolo e minerali bassi (punteggio 68)
 
 I file *_anteprima.png mostrano il contenuto senza aprire i PDF.
 
