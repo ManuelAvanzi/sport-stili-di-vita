@@ -127,8 +127,8 @@ function callMock(kind) {
   };
 }
 
-function httpError(status, message) { const e = new Error(message || String(status)); e.status = status; return e; }
-async function safeText(res) { try { return (await res.text()).slice(0, 300); } catch { return ""; } }
+function httpError(status, message) { const e = new Error(String(status) + ": " + (message || "(nessun dettaglio)")); e.status = status; return e; }
+async function safeText(res) { try { return (await res.text()).slice(0, 400); } catch (e) { return "text-err " + e.message; } }
 
 // API pubblica del modulo: due operazioni, indipendenti dal provider.
 export async function extract(env, imagesB64) {
