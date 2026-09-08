@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>img{max-width:100%}</style>
-<script>window.SVS_API = "https://svs-ai.manuelavanzi.workers.dev"; // URL del backend AI (vedi server/README.md); vuoto = lettura manuale + claude.ai</script>
+<script>window.SVS_API = "https://svs-ai.manuelavanzi.workers.dev"; // URL del backend AI (vedi server/README.md)</script>
 <title>Sport e Stili di Vita</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap">
 <style>
@@ -191,14 +191,16 @@ svg{display:block}
 @media (prefers-reduced-motion: reduce){ .spin{animation-duration:2.5s} }
 .preview-doc{max-height:170px; border-radius:14px; overflow:hidden; box-shadow:var(--shadow)}
 .preview-doc img{max-height:170px; display:block}
-.doccard{border:1px solid var(--line-soft); border-radius:18px; padding:1rem 1.1rem; display:grid;
-  gap:.6rem; background:var(--inset)}
+.doccard{border:1px solid var(--line-soft); border-left:4px solid var(--accent); border-radius:18px;
+  padding:1rem 1.1rem; display:grid; gap:.6rem; background:var(--inset)}
 .doccard .codebar{display:flex; align-items:center; gap:.7rem; flex-wrap:wrap}
-.doccard .code{font-family:Manrope,sans-serif; font-weight:800; font-size:1.12rem; letter-spacing:-.01em}
+.doccard .code{font-family:Manrope,sans-serif; font-weight:800; font-size:1.12rem; letter-spacing:-.01em; color:var(--accent)}
+.doccard .codebar{padding-bottom:.55rem; border-bottom:1px solid color-mix(in srgb, var(--accent) 22%, transparent)}
 .doccard .chip{font-size:.7rem; font-weight:600; background:var(--surface2); color:var(--ink2);
   border-radius:999px; padding:.16rem .62rem}
 .kv{display:grid; grid-template-columns:repeat(auto-fill,minmax(128px,1fr)); gap:.45rem}
-.kv .k{background:var(--glass); border:1px solid var(--line-soft); border-radius:12px; padding:.45rem .6rem}
+.kv .k{background:var(--glass); border:1px solid var(--line-soft); border-top:2px solid var(--c2);
+  border-radius:12px; padding:.45rem .6rem}
 .kv .k span{display:block; font-size:.64rem; text-transform:uppercase; letter-spacing:.06em;
   color:var(--faint); white-space:nowrap; font-weight:500}
 .kv .k b{font-size:1rem; font-family:Manrope,sans-serif; font-weight:700}
@@ -635,7 +637,7 @@ function wireS1(){
 /* ================= SECTION 2 ================= */
 function viewS2(){
   const d = state.doc, g = state.gusti || {};
-  const mode = aiMode();
+  const claudeHere = !!(window.claude && typeof window.claude.use === "function");
   const aiOk = aiImagesOk();
   return `
   <div class="sec-h"><h2>Carica i dati</h2><span class="sub">prima il referto della BIA, poi i tuoi gusti</span></div>
@@ -664,17 +666,19 @@ function viewS2(){
 
   <section class="card pad">
     <div class="eyebrow">Passo 2 · Descrivi i tuoi gusti e le attività preferite</div>
-    <div class="qgrid" style="margin-top:.7rem">
+    <p style="color:var(--ink2); margin:.45rem 0 0; max-width:62ch">Scrivi liberamente, come lo racconteresti a un amico:
+      queste risposte servono a costruire le tappe 3 e 4 su di te — più dettagli dai, meno generici saranno i consigli.</p>
+    <div class="qgrid" style="margin-top:.8rem">
       <label class="field"><span>Quali sport pratichi o quali attività motorie preferisci?</span>
-        <textarea id="qSport" rows="2" placeholder="es. cammino volentieri, nuoto d'estate, mi piacerebbe provare la palestra…">${esc(g.sport||"")}</textarea></label>
+        <textarea id="qSport" rows="2" placeholder="es. cammino volentieri e nuoto d'estate; ho giocato a calcetto e mi manca; vorrei provare la palestra ma mi annoia…">${esc(g.sport||"")}</textarea></label>
       <label class="field"><span>Dove ti trovi? Città o area geografica</span>
-        <input id="qLuogo" placeholder="es. Livorno e dintorni" value="${esc(g.luogo||"")}"></label>
+        <input id="qLuogo" placeholder="es. Livorno, zona mare — serve per suggerirti percorsi e impianti della tua zona" value="${esc(g.luogo||"")}"></label>
       <label class="field"><span>Hai abitudini alimentari particolari?</span>
-        <textarea id="qAbitudini" rows="2" placeholder="es. vegetariano, salto la colazione, ceno tardi…">${esc(g.abitudini||"")}</textarea></label>
+        <textarea id="qAbitudini" rows="2" placeholder="es. salto quasi sempre la colazione, ceno dopo le 21, il weekend mangio fuori; sono vegetariano…">${esc(g.abitudini||"")}</textarea></label>
       <label class="field"><span>Ti piacciono tipi di alimenti specifici? (carne, pesce, pasta, dolci, bibite zuccherate o alcoliche…)</span>
-        <textarea id="qCibi" rows="2" placeholder="es. amo la pasta e il pesce, poca verdura, un debole per i dolci…">${esc(g.cibi||"")}</textarea></label>
+        <textarea id="qCibi" rows="2" placeholder="es. amo pasta e pesce, la verdura poca e controvoglia, un debole per i dolci e le birre del weekend…">${esc(g.cibi||"")}</textarea></label>
       <label class="field"><span>In quali momenti della giornata e della settimana fai movimento?</span>
-        <textarea id="qMomenti" rows="2" placeholder="es. la sera dopo il lavoro, il sabato mattina…">${esc(g.momenti||"")}</textarea></label>
+        <textarea id="qMomenti" rows="2" placeholder="es. la sera dopo le 18 nei giorni feriali, il sabato mattina; realisticamente 30-40 minuti a volta…">${esc(g.momenti||"")}</textarea></label>
     </div>
     <div class="foot-cta" style="margin-top:1rem">
       <span class="hint">Le risposte servono solo a personalizzare consigli e proposte.</span>
@@ -972,7 +976,7 @@ function viewS3(){
   <div class="foot-cta">
     <p class="disclaimer">Contenuti a scopo didattico: non sostituiscono il parere di un medico o di un
       nutrizionista, in particolare in presenza di patologie, gravidanza o diete speciali.</p>
-    <button class="btn energy" data-go="s4">Passa alle attività sportive ${icon("arrow")}</button>
+    <span style="display:flex;gap:.6rem;flex-wrap:wrap">${reportBtnHTML()}<button class="btn energy" data-go="s4">Passa alle attività sportive ${icon("arrow")}</button></span>
   </div>`;
 }
 function aiFoodHTML(){
@@ -1083,12 +1087,12 @@ function viewS4(){
   <div class="foot-cta">
     <p class="disclaimer">Prima di iniziare un'attività intensa o agonistica è buona norma una visita
       medico-sportiva. Aumenta gradualmente durata e intensità, e ascolta i segnali del corpo.</p>
-    <button class="btn" data-go="s1">Ricomincia dal percorso ${icon("refresh")}</button>
+    <span style="display:flex;gap:.6rem;flex-wrap:wrap">${reportBtnHTML()}<button class="btn" data-go="s1">Ricomincia dal percorso ${icon("refresh")}</button></span>
   </div>`;
 }
 function aiMoveHTML(){
   const a = state.ai.move;
-  const claudeHere = !!(window.claude && typeof window.claude.use === "function");
+  const mode = aiMode();
   if(a) return aiMoveRender(a);
   if(!mode) return `<div class="notice">${icon("info")}<span>Apri la pagina su claude.ai per generare un piano di movimento personalizzato su dati, gusti e territorio.</span></div>`;
   return `<p style="color:var(--ink2);margin:0">Tre modi diversi di muoversi — un solo sport, un mix di attività,
@@ -1152,6 +1156,93 @@ function wireS4(){
   if(regen) regen.onclick = () => { delete state.ai.move; save(); render(); setTimeout(() => $("#btnGenMove")?.click(), 50); };
 }
 
+/* ================= report PDF ================= */
+function loadJsPdf(){
+  return new Promise((res, rej) => {
+    if(window.jspdf) return res(window.jspdf);
+    const s = document.createElement("script");
+    s.src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";
+    s.onload = () => window.jspdf ? res(window.jspdf) : rej(new Error("jsPDF non caricato"));
+    s.onerror = () => rej(new Error("jsPDF non raggiungibile"));
+    document.head.appendChild(s);
+  });
+}
+const reportBtnHTML = () => (state.doc && !window.claude)
+  ? `<button class="btn" data-pdf>${icon("download")}Scarica il report (PDF)</button>` : "";
+async function scaricaReport(btn){
+  try{
+    if(btn){ btn.disabled = true; }
+    const { jsPDF } = await loadJsPdf();
+    const d = state.doc, g = state.gusti || {};
+    const pdf = new jsPDF({unit:"pt", format:"a4"});
+    const G = [31,122,86], INK = [23,33,27], GREY = [90,104,95];
+    const W = 595, M = 52, CW = W - M*2;
+    let y = 0;
+    const page = () => { pdf.addPage(); y = 64; };
+    const need = h => { if(y + h > 780) page(); };
+    const h2 = t => { need(46); y += 26; pdf.setDrawColor(...G); pdf.setLineWidth(1.2); pdf.line(M, y, M+26, y);
+      pdf.setFont("helvetica","bold"); pdf.setFontSize(13); pdf.setTextColor(...G); pdf.text(t, M+34, y+4); y += 22; };
+    const para = (t, size=10.5, color=INK, indent=0) => {
+      pdf.setFont("helvetica","normal"); pdf.setFontSize(size); pdf.setTextColor(...color);
+      for(const line of pdf.splitTextToSize(t, CW - indent)){ need(15); pdf.text(line, M + indent, y); y += 14.5; } };
+    const bullet = t => { need(15); pdf.setTextColor(...G); pdf.setFontSize(10.5); pdf.text("\u2022", M+4, y);
+      const lines = pdf.splitTextToSize(t, CW-18); pdf.setTextColor(...INK); pdf.setFont("helvetica","normal");
+      for(const l of lines){ need(15); pdf.text(l, M+16, y); y += 14.5; } y += 1; };
+    // header
+    pdf.setFillColor(...G); pdf.rect(0, 0, W, 78, "F");
+    pdf.setTextColor(255,255,255); pdf.setFont("helvetica","bold"); pdf.setFontSize(19);
+    pdf.text("Sport e Stili di Vita", M, 40);
+    pdf.setFont("helvetica","normal"); pdf.setFontSize(10.5);
+    pdf.text(`Report personale \u00b7 documento anonimo n. ${d.code} \u00b7 ${new Date().toLocaleDateString("it-IT")}`, M, 58);
+    y = 104;
+    // dati
+    h2("I tuoi dati dalla BIA");
+    const rows = [["Peso", d.weight, "kg"],["Muscolo scheletrico", d.smm, "kg"],["Massa grassa", d.bfm, "kg"],
+      ["Grasso corporeo", d.pbf, "%"],["IMC", d.bmi, "kg/m\u00b2"],["Punteggio InBody", d.score, "/100"],
+      ["Metabolismo basale", d.bmr, "kcal"],["Fabbisogno giornaliero", d.kcal, "kcal"],["Grasso viscerale", d.vfl, "liv."],
+      ["Rapporto vita/fianchi", d.whr, ""],["Massa magra", d.ffm, "kg"],["Peso target", d.targetWeight, "kg"]]
+      .filter(r => r[1] != null);
+    const colw = CW/2;
+    rows.forEach((r, i) => {
+      const cx = M + (i%2)*colw, cy0 = y + Math.floor(i/2)*18;
+      if(i%2===0) need(20);
+      pdf.setFont("helvetica","normal"); pdf.setFontSize(10); pdf.setTextColor(...GREY); pdf.text(r[0], cx, cy0);
+      pdf.setFont("helvetica","bold"); pdf.setTextColor(...INK); pdf.text(`${fmtN(r[1], r[0]==="Rapporto vita/fianchi"?2:1)} ${r[2]}`, cx + 132, cy0);
+    });
+    y += Math.ceil(rows.length/2)*18 + 6;
+    const kcal = d.kcal || (d.bmr ? Math.round(d.bmr*1.45) : null);
+    if(kcal){ h2("Le calorie della tua giornata");
+      MEAL_SPLIT.forEach(([n,p]) => bullet(`${n}: circa ${Math.round(p*100)}% \u2248 ${fmtN(kcal*p)} kcal`)); }
+    // consigli AI
+    const a = state.ai.food;
+    if(a){ h2("Consigli alimentari personalizzati");
+      if(a.premessa) para(a.premessa); y += 6;
+      para("Da privilegiare:", 11, G); (a.privilegiare||[]).forEach(x => bullet(`${x.cosa}${x.perche?" \u2014 "+x.perche:""}`)); y += 4;
+      para("Da limitare:", 11, G); (a.limitare||[]).forEach(x => bullet(`${x.cosa}${x.perche?" \u2014 "+x.perche:""}`)); y += 4;
+      para("Quantit\u00e0 indicative:", 11, G); (a.quantita||[]).forEach(x => bullet(String(x)));
+    }
+    const m = state.ai.move;
+    if(m && m.opzioni){ h2("Il tuo piano di movimento");
+      m.opzioni.forEach(o => {
+        para(o.titolo || "", 11.5, G); if(o.descrizione) para(o.descrizione);
+        (o.settimana||[]).forEach(dd => bullet(`${dd.giorno||""}: ${dd.attivita||""}${dd.durata?" \u00b7 "+dd.durata:""}`));
+        if(o.kcal_settimana) para(`\u2248 ${fmtN(o.kcal_settimana)} kcal a settimana`, 9.5, GREY, 16);
+        y += 6;
+      });
+      (m.territorio||[]).length && para("Nella tua zona: " + m.territorio.join("; "), 10, GREY);
+    }
+    if(!a && !m){ h2("Consigli personalizzati");
+      para("Genera i consigli alimentari (tappa 3) e il piano di movimento (tappa 4) per includerli nel report."); }
+    // footer
+    need(52); y += 18; pdf.setDrawColor(...G); pdf.setLineWidth(.8); pdf.line(M, y, W-M, y); y += 14;
+    para("Contenuti a scopo didattico: non sostituiscono il parere di un medico o di un nutrizionista. Documento identificato in forma anonima, senza dati personali.", 8.5, GREY);
+    pdf.save(`report-sport-stili-di-vita-${d.code}.pdf`);
+  }catch(e){
+    toast("Non sono riuscito a generare il PDF: " + (e && e.message || e));
+  }finally{ if(btn){ btn.disabled = false; } }
+}
+function wirePdf(){ $$("#main [data-pdf]").forEach(b => b.onclick = () => scaricaReport(b)); }
+
 /* ================= render ================= */
 function render(){
   renderStepper();
@@ -1161,6 +1252,7 @@ function render(){
   if(v==="s2") wireS2();
   if(v==="s3") wireS3();
   if(v==="s4") wireS4();
+  wirePdf();
 }
 render();
 </script>
